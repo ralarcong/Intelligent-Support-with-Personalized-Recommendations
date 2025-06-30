@@ -1,8 +1,8 @@
-[build-system]                      # ---- PEP 517 section
-requires = ["setuptools>=68", "wheel"]  # wheel ≙ PEP 427 sdist helper  :contentReference[oaicite:1]{index=1}
+[build-system]                      # ---- PEP 517
+requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.build_meta"
 
-[project]                           # ---- PEP 621 section
+[project]                           # ---- PEP 621
 name = "shakers_rag"
 version = "0.1.0"
 description = "Retrieval-augmented Q&A + recommender demo for the Shakers challenge"
@@ -12,23 +12,25 @@ authors = [
 readme = "README.md"
 requires-python = ">=3.10"
 
-# Core runtime dependencies (everything your code imports)
+# ── Runtime dependencies ────────────────────────────────────────────────
 dependencies = [
-  "fastapi>=0.111",                 # ASGI framework  :contentReference[oaicite:2]{index=2}
-  "uvicorn[standard]>=0.29",        # production server  :contentReference[oaicite:3]{index=3}
+  "fastapi>=0.111",                 # ASGI framework
+  "uvicorn[standard]>=0.29",        # production server
   "langchain-openai>=0.1.18",       # embeddings + LLM wrappers
   "langchain-community>=0.0.36",
-  "chromadb>=0.4.24",
+  "chromadb>=0.4.24",               # vector store
   "python-dotenv>=1.0",
-  "numpy>=1.23"
+  "numpy>=1.23",
+  "textblob>=0.19.0",               # sentiment EN
+  "langdetect>=1.0.9",              # idioma auto-detect
+  "pysentimiento>=0.7.0",           # sentiment ES (RoBERTuito)
 ]
 
-[project.optional-dependencies]     # extras ⇢ `pip install .[dev]`
+[project.optional-dependencies]     # pip install .[dev]
 dev = ["pytest", "black", "ruff", "ragas"]
 
-[project.scripts]                   # `$ shakers-rag` starts the server (optional)
+[project.scripts]                   # $ shakers-rag
 shakers-rag = "app.__main__:main"
 
-# tell setuptools “all code lives under src/”
-[tool.setuptools.packages.find]     # official directive  :contentReference[oaicite:4]{index=4}
+[tool.setuptools.packages.find]
 where = ["src"]

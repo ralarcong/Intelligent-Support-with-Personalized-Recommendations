@@ -10,6 +10,11 @@ from langchain.memory import ConversationBufferMemory
 from langchain.prompts import PromptTemplate
 from langchain.schema.runnable import RunnablePassthrough
 from langchain.callbacks.streaming_aiter import AsyncIteratorCallbackHandler
+from langchain_core.tools import Tool
+from src.app.tools.mood import detect_mood
+from collections import defaultdict
+from pprint import pprint
+from langchain_core.messages import AIMessage
 import asyncio
 from dotenv import load_dotenv
 
@@ -18,6 +23,7 @@ class RAGService:
         load_dotenv()
         self.emb = OpenAIEmbeddings()                          
         self.llm = ChatOpenAI(model_name="gpt-4.1-nano", temperature=0.2)
+        self.llm_tools = self.llm.bind_tools([detect_mood])
 
         loader = DirectoryLoader(Path(docs_path), glob="**/*.md")
         docs = loader.load()                                     
@@ -30,14 +36,16 @@ class RAGService:
 
         self._chains = {}
         self._max_history = max_history
+        self._user_mood = defaultdict(lambda:{"style": "profesional", "emoji": "🙂"}
+)
 
         self._reply_template = PromptTemplate(
-            input_variables=["context", "question", "chat_history"],
+            input_variables=["context", "question", "chat_history", "style", "emoji"],
             template=(
-                "Eres el asistente oficial de ClaraAI.\n\n"
+                "Eres el asistente oficial de ClaraAI {emoji}.\n\n"
                 "Historial reciente:\n{chat_history}\n"
                 "Contexto de la base de conocimiento:\n{context}\n\n"
-                "Instrucciones:\n"
+                "Instrucciones (tu tono debe ser {style}):\n"
                 "1. Si el historial incluye un nombre propio, saluda al usuario por su nombre.\n"
                 "2. Responde en español con ≤ 4 frases concisas.\n"
                 "3. Cita las fuentes como «[docs/…]» al final.\n"
@@ -73,6 +81,7 @@ class RAGService:
         """
         Sequential approach
         """
+        self._update_mood(uid, question)
         top_hit = self.vectordb.similarity_search_with_score(question, k=1)
         if not top_hit:                                  
             return "Lo siento, no tengo información sobre eso.", []
@@ -83,8 +92,12 @@ class RAGService:
         if sim0 < τ:                                 
             return "Lo siento, no tengo información sobre eso.", []
 
-        chain  = self._get_chain(uid)
-        result = chain.invoke({"question": question})
+        vars_in = {
+            "question": question,
+            "style":   self._user_mood[uid]["style"],
+            "emoji":   self._user_mood[uid]["emoji"],
+        }
+        result = self._get_chain(uid).invoke(vars_in)
 
         answer  = result["answer"]
         sources = [d.metadata["source"] for d in result["source_documents"]]
@@ -93,6 +106,7 @@ class RAGService:
     async def ask_stream(self, question: str, uid: str, τ: float = 0.15):
         """Async generator that yields the answer token-by-token."""
         print(">> ask_stream called:", question)
+        self._update_mood(uid, question)
         history = self._get_chain(uid).memory.load_memory_variables({})["chat_history"]
         print("📝 chat_history:", history or "(empty)")
         top_hit = self.vectordb.similarity_search_with_score(question, k=1)
@@ -108,7 +122,6 @@ class RAGService:
             streaming=True,
             callbacks=[cb_answer],
         )
-
         chain = ConversationalRetrievalChain.from_llm(
             llm=llm_stream,                
             condense_question_llm=self.llm, 
@@ -120,7 +133,13 @@ class RAGService:
             return_source_documents=True,
         )
 
-        task = asyncio.create_task(chain.ainvoke({"question": question}))
+        task = asyncio.create_task(
+            chain.ainvoke({
+                "question": question,
+                "style":   self._user_mood[uid]["style"],
+                "emoji":   self._user_mood[uid]["emoji"],
+            })
+        )
 
         async for token in cb_answer.aiter():
             yield token                     
@@ -135,3 +154,13 @@ class RAGService:
             search_type="similarity",               
             search_kwargs={"k": k}
         )
+        
+    def _update_mood(self, uid: str, text: str):
+        mood = detect_mood.run(text)            # ejecuta la tool aquí mismo
+        self._user_mood[uid] = {
+            "style": mood["style"],
+            "emoji": mood["emoji"],
+        }
+        print(f"[mood] {uid} → {mood}")         # 👀 visible en terminal
+
+

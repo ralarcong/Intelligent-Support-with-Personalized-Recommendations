@@ -24,6 +24,9 @@ class RecommendationService:
         self._writes    = 0                           # counter
 
         self._profiles: dict[str, UserProfile] = self._load_profiles()
+        self._user_mood = defaultdict(lambda: {"mood":"neutral",
+                                       "style":"profesional",
+                                       "emoji":"🙂"})
 
     def log_sources(self, uid: str, sources: list[str]):
         self._profiles[uid].docs.update(sources)
