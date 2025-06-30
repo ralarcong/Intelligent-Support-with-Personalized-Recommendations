@@ -40,17 +40,21 @@ class RecommendationService:
     def recommend(self, uid: str, k: int = 3, lambda_: float = 0.5):
         profile = self._profiles[uid]
         seen    = profile.docs
-        if not seen:                              
-            return []
 
         ids, emb, meta, txt = self._get_vectors()
         unseen_idx = [i for i, m in enumerate(meta) if m["source"] not in seen]
-        if not unseen_idx:
-            return []                              
 
+        # --- COLD START --------------------------------------------------
+        if not profile.qvecs:                         # no history yet
+            picks = np.random.choice(unseen_idx, k, replace=False)
+            return [self._build_payload(i, meta, txt, emb[picks].mean(0), emb)
+                    for i in picks]
+
+        # ----------------------------------------------------------------
         centroid = self._centroid(emb, meta, profile)
-        ranked = self._mmr(centroid, emb, unseen_idx, k, lambda_)
-        return [self._build_payload(i, meta, txt, centroid, emb) for i in ranked]
+        ranked = self._mmr(centroid, emb, meta, unseen_idx, k, lambda_)
+        return   [self._build_payload(i, meta, txt, centroid, emb) for i in ranked]
+
 
     # ---------- helpers ----------------------------------------------------
     def _get_vectors(self):
@@ -76,28 +80,35 @@ class RecommendationService:
             return q_vecs.mean(axis=0)      
 
 
-    def _mmr(self, query_vec, emb, candidates, k, λ):
+    def _mmr(self, query_vec, emb, meta, candidates, k, λ):
         selected = []
         while candidates and len(selected) < k:
             mmr_score, pick = -1, None
             for idx in candidates:
                 rel = self._cos(query_vec, emb[idx])
                 div = max(self._cos(emb[idx], emb[s]) for s in selected) if selected else 0
+                if selected and meta[idx]["topic"] == meta[selected[-1]]["topic"]:
+                    div += 0.15
                 score = λ * rel - (1 - λ) * div
                 if score > mmr_score:
                     mmr_score, pick = score, idx
             selected.append(pick)
             candidates.remove(pick)
         return selected
-
+    
     def _build_payload(self, idx, meta, txt, centroid, emb) -> dict:
         title = Path(meta[idx]["source"]).stem.replace("_", " ")
-        rel = self._cos(centroid, emb[idx])
-        why = (f"We haven't shown you anything on **{title}** yet, "
-               f"but it’s related to topics you asked about "
-               f"(similarity {rel:.2f}).")
+        rel   = self._cos(centroid, emb[idx])
+        lang  = "es" if meta[idx].get("lang") == "es" else "en"
+        why   = (
+            (f"Aún no has leído **{title}**; está relacionado "
+            f"con tus intereses (similitud {rel:.2f}).")
+            if lang == "es" else
+            (f"We haven't shown you anything on **{title}** yet – "
+            f"but it's close to what you asked ({rel:.2f}).")
+        )
         return {
-            "title": title,
+            "title": title.title(),
             "snippet": textwrap.shorten(txt[idx], 140),
             "why": why
         }

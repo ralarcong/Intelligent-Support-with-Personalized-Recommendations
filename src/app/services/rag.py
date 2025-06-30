@@ -26,7 +26,11 @@ class RAGService:
         self.llm_tools = self.llm.bind_tools([detect_mood])
 
         loader = DirectoryLoader(Path(docs_path), glob="**/*.md")
-        docs = loader.load()                                     
+        docs = loader.load()  
+
+        for doc in docs:                           # doc = langchain.schema.Document
+            # docs/payments/fees.md  →  "payments"
+            doc.metadata["topic"] = Path(doc.metadata["source"]).parts[1]                                   
 
         settings = Settings(anonymized_telemetry=False,          
                             persist_directory=persist_dir)
@@ -48,8 +52,7 @@ class RAGService:
                 "Instrucciones (tu tono debe ser {style}):\n"
                 "1. Si el historial incluye un nombre propio, saluda al usuario por su nombre.\n"
                 "2. Responde en español con ≤ 4 frases concisas.\n"
-                "3. Cita las fuentes como «[docs/…]» al final.\n"
-                "4. Si no hay contexto relevante responde: "
+                "3. Si no hay contexto relevante responde: "
                 "\"Lo siento, no tengo información sobre eso\".\n\n"
                 "Pregunta:\n{question}\n"
             ),
@@ -146,8 +149,10 @@ class RAGService:
 
         result  = await task                
         sources = [d.metadata["source"] for d in result["source_documents"]]
+        print("SOURCES",sources)
         if sources:
-            yield f"\n\nFuentes: {', '.join(sources)}"
+            payload = ", ".join(sources)
+            yield f"\n Sources \ndata: {payload}\n\n"
 
     def _smart_retriever(self, k: int = 3):
         return self.vectordb.as_retriever(

@@ -46,8 +46,7 @@ async def ask_stream(question: str,
                               media_type="text/event-stream")
 
 @router.post("/recommend")
-def recommend(
-    req: RecReq,
-    rec: RecommendationService = Depends(get_rec)
-):
+def recommend(req: RecReq,
+              rec: RecommendationService = Depends(get_rec)):
+    rec.log_query(req.user_id, "(recommend call)")
     return {"recommendations": rec.recommend(req.user_id, req.top_k)}
