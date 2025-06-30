@@ -1,0 +1,34 @@
+[build-system]                      # ---- PEP 517 section
+requires = ["setuptools>=68", "wheel"]  # wheel ≙ PEP 427 sdist helper  :contentReference[oaicite:1]{index=1}
+build-backend = "setuptools.build_meta"
+
+[project]                           # ---- PEP 621 section
+name = "shakers_rag"
+version = "0.1.0"
+description = "Retrieval-augmented Q&A + recommender demo for the Shakers challenge"
+authors = [
+  { name = "Your Name", email = "you@example.com" }
+]
+readme = "README.md"
+requires-python = ">=3.10"
+
+# Core runtime dependencies (everything your code imports)
+dependencies = [
+  "fastapi>=0.111",                 # ASGI framework  :contentReference[oaicite:2]{index=2}
+  "uvicorn[standard]>=0.29",        # production server  :contentReference[oaicite:3]{index=3}
+  "langchain-openai>=0.1.18",       # embeddings + LLM wrappers
+  "langchain-community>=0.0.36",
+  "chromadb>=0.4.24",
+  "python-dotenv>=1.0",
+  "numpy>=1.23"
+]
+
+[project.optional-dependencies]     # extras ⇢ `pip install .[dev]`
+dev = ["pytest", "black", "ruff", "ragas"]
+
+[project.scripts]                   # `$ shakers-rag` starts the server (optional)
+shakers-rag = "app.__main__:main"
+
+# tell setuptools “all code lives under src/”
+[tool.setuptools.packages.find]     # official directive  :contentReference[oaicite:4]{index=4}
+where = ["src"]

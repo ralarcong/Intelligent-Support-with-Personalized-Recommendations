@@ -1,0 +1,23 @@
+[
+    {
+      "user_id": "user_001",
+      "name": "Alice",
+      "role": "Freelancer",
+      "expertise": "Beginner",
+      "goals": ["Understand pricing", "Learn platform basics"]
+    },
+    {
+      "user_id": "user_002",
+      "name": "Bob",
+      "role": "Project Manager",
+      "expertise": "Intermediate",
+      "goals": ["Manage team subscriptions", "Track project progress"]
+    },
+    {
+      "user_id": "user_003",
+      "name": "Carol",
+      "role": "Developer",
+      "expertise": "Advanced",
+      "goals": ["Integrate API", "Automate workflows"]
+    }
+  ]

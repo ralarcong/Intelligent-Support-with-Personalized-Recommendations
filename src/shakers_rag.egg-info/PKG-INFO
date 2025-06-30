@@ -1,0 +1,21 @@
+Metadata-Version: 2.4
+Name: shakers_rag
+Version: 0.1.0
+Summary: Retrieval-augmented Q&A + recommender demo for the Shakers challenge
+Author-email: Your Name <you@example.com>
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+Requires-Dist: fastapi>=0.111
+Requires-Dist: uvicorn[standard]>=0.29
+Requires-Dist: langchain-openai>=0.1.18
+Requires-Dist: langchain-community>=0.0.36
+Requires-Dist: chromadb>=0.4.24
+Requires-Dist: python-dotenv>=1.0
+Requires-Dist: numpy>=1.23
+Provides-Extra: dev
+Requires-Dist: pytest; extra == "dev"
+Requires-Dist: black; extra == "dev"
+Requires-Dist: ruff; extra == "dev"
+Requires-Dist: ragas; extra == "dev"
+
+# Intelligent-Support-with-Personalized-Recommendations

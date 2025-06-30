@@ -1,0 +1,13 @@
+fastapi>=0.111
+uvicorn[standard]>=0.29
+langchain-openai>=0.1.18
+langchain-community>=0.0.36
+chromadb>=0.4.24
+python-dotenv>=1.0
+numpy>=1.23
+
+[dev]
+pytest
+black
+ruff
+ragas

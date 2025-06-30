@@ -1,0 +1,27 @@
+[
+    {
+      "user_id": "user_001",
+      "query_history": [
+        "What is the platform's pricing model?",
+        "How do I set up my first project?",
+        "Is there a tutorial for beginners?"
+      ]
+    },
+    {
+      "user_id": "user_002",
+      "query_history": [
+        "How can I add team members?",
+        "Can I assign tasks to specific users?",
+        "What reports are available for project tracking?"
+      ]
+    },
+    {
+      "user_id": "user_003",
+      "query_history": [
+        "Where can I find the API documentation?",
+        "How do I authenticate API requests?",
+        "Is there a sandbox environment for testing?"
+      ]
+    }
+  ]
+  

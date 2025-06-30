@@ -1,0 +1,2 @@
+[console_scripts]
+shakers-rag = app.__main__:main

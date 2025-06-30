@@ -1,0 +1,30 @@
+{"user_input":"¿Qué porcentaje cobra la plataforma ClaraAI?","reference":"La tarifa de plataforma es el 10 % (docs/fees.md)."}
+{"user_input":"¿Quién paga el seguro de responsabilidad civil en ClaraAI?","reference":"Lo paga el cliente (docs/fees.md)."}
+{"user_input":"¿Cuánto es la comisión por cambio de divisa?","reference":"0,8 % para el freelancer (docs/fees.md)."}
+{"user_input":"Desglosa una factura típica de 2 000 € en ClaraAI.","reference":"Subtotal 2 000 €, fee plataforma 10 % (-200 €), total a percibir 1 800 € (docs/fees.md)."}
+{"user_input":"¿El IVA está incluido en las facturas de ClaraAI?","reference":"ClaraAI emite facturas con IVA exento por prestación internacional (docs/fees.md)."}
+{"user_input":"¿Cuánto tiempo tarda el onboarding de un cliente?","reference":"48 h en promedio tras la llamada de kick-off (docs/onboarding.md)."}
+{"user_input":"¿Cuáles son las tres fases del onboarding?","reference":"Registro y validación, Kick-off, Activación (docs/onboarding.md)."}
+{"user_input":"¿Qué sucede si el cliente no agenda la llamada en 72 h?","reference":"Se envía un recordatorio automático (docs/onboarding.md)."}
+{"user_input":"Who hosts the live platform demo during onboarding?","reference":"A Success Manager runs the live demo (docs/onboarding.md)."}
+{"user_input":"¿En qué fase se verifica el teléfono del cliente?","reference":"En la fase de Registro y validación (docs/onboarding.md)."}
+{"user_input":"¿Cómo funciona la activación de escrow?","reference":"El presupuesto se bloquea en una cuenta protegida al aprobar la propuesta (docs/payments.md)."}
+{"user_input":"Tiempo de retiro a SEPA después de la aprobación.","reference":"Hasta dos días hábiles (docs/payments.md)."}
+{"user_input":"¿Qué pasa si un cliente desaparece sin aprobar el hito?","reference":"ClaraAI libera el escrow tras 14 días de disputa (docs/payments.md)."}
+{"user_input":"List the four payment steps in ClaraAI.","reference":"Escrow activation, Milestone releases, Payout speed, Fees & taxes (docs/payments.md)."}
+{"user_input":"¿La plataforma retiene impuestos en los pagos?","reference":"Sí, deduce un 10 % de fee y emite una sola factura española (docs/payments.md)."}
+{"user_input":"¿Qué es un freelancer de ClaraAI?","reference":"Un profesional validado tras pruebas de skills, portfolio y entrevista (docs/freelancer.md)."}
+{"user_input":"¿Cuáles son los perks principales para un freelancer?","reference":"Pagos garantizados, matching AI y squads opcionales (docs/freelancer.md)."}
+{"user_input":"Average project duration on ClaraAI?","reference":"3–4 months with > €15 000 billing (docs/freelancer.md)."}
+{"user_input":"¿Cómo se llama internamente un freelancer?","reference":"Freeworker (docs/freelancer.md)."}
+{"user_input":"Does ClaraAI chase invoices for you?","reference":"No, because every project is escrow-protected (docs/freelancer.md)."}
+{"user_input":"Plazo máximo para abrir una disputa.","reference":"14 días tras marcar un hito como entregado (docs/disputes.md)."}
+{"user_input":"¿Cuánto tarda un árbitro en responder inicialmente?","reference":"Menos de 48 h (docs/disputes.md)."}
+{"user_input":"Resultados posibles de una disputa.","reference":"Reembolso parcial, reenvío, o pago íntegro (docs/disputes.md)."}
+{"user_input":"Tasa histórica de disputas en 2024.","reference":"0,9 % de los proyectos cerrados (docs/disputes.md)."}
+{"user_input":"¿Cuántos días hay para apelar una disputa?","reference":"7 días (docs/disputes.md)."}
+{"user_input":"¿Qué documento cubre a las tres partes en un proyecto?","reference":"Un contrato tripartito único firmado digitalmente (docs/contracts.md)."}
+{"user_input":"Where are signed contracts stored?","reference":"In the same escrow vault as invoices for 5 years (docs/contracts.md)."}
+{"user_input":"¿Cuándo se lanzará el plugin de Figma según la hoja de ruta?","reference":"Está en el backlog como nice-to-have; sin fecha fija (docs/roadmap.md)."}
+{"user_input":"Fecha objetivo para el API de wallet de escrow.","reference":"15 de agosto de 2025 (docs/roadmap.md)."}
+{"user_input":"Objetivo principal del sprint Trust & Safety.","reference":"Reducir disputas por debajo del 1 % y soporte < 12 h (docs/roadmap.md)."}
