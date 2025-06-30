@@ -8,12 +8,12 @@ sa_es = create_analyzer(task="sentiment", lang="es")
 
 _EMOJI = {"happy": "😀", "sad": "😢", "angry": "😡", "neutral": "🙂"}
 
-@tool(description="Detecta el estado emocional (happy|sad|angry|neutral) "\
-                  "y devuelve {'mood','style','emoji'}")
+@tool(description="Detects the emotional state (happy|sad|angry|neutral) "\
+                  "and returns {'mood','style','emoji'}")
 def detect_mood(text: str) -> dict:
     """
-    Usa TextBlob si el texto está mayoritariamente en inglés;
-    usa pysentimiento (RoBERTuito) si está en español.
+    Use TextBlob if the text is mostly in English;
+    uses pysentimiento (RoBERTuito) if it is in Spanish.
     """
     try:
         lang = detect(text)             # 'en', 'es', …
