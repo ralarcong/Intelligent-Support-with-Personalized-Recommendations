@@ -1,4 +1,21 @@
 # src/app/__init__.py
+"""
+app.__init__
+============
+
+FastAPI application factory for the Shakers RAG Demo.
+
+Features
+--------
+- Mounts static files under `/static`.
+- Serves `index.html` at `/`.
+- Includes all v1 API routes under `/api/v1`.
+
+Exports
+-------
+create_app : function
+    Returns the configured FastAPI app instance.
+"""
 from fastapi import FastAPI
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles     
@@ -6,6 +23,14 @@ from pathlib import Path
 from .api.v1.routes import router as api_router
 
 def create_app() -> FastAPI:
+    """
+    Build and configure the FastAPI app with static and API routes.
+
+    Returns
+    -------
+    FastAPI
+        Fully configured app ready for Uvicorn.
+    """
     app = FastAPI(title="Shakers RAG Demo")
     app.include_router(api_router, prefix="/api")
 
