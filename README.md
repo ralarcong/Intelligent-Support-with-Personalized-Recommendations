@@ -1,6 +1,6 @@
 # ClaraAI — RAG Demo (Q&A + Personalized Recommendations)
 
-Proyecto de referencia para el reto **Shakers**:  
+First version of the reference project for the **Shakers** challenge:  
 * RAG Service (Retrieval-Augmented Generation) for questions about ClaraAI. 
 * Personalized recommender for unseen documents, based on user history.
 
