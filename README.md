@@ -21,7 +21,7 @@ First version of the reference project for the **Shakers** challenge:
 
 ```bash
 # clone the repo
-Clonar este repositorio
+Clone this repository
 cd Intelligent-Support-with-Personalized-Recommendations
 
 # create and activate the environment
