@@ -40,7 +40,7 @@ uvicorn main:app --reload
 # ENJOY!
 
 ---
-
+```
 ## 3. Quick instalation guide for demo
 
 # Project structure
@@ -78,20 +78,27 @@ uvicorn main:app --reload
 ├── README.md                   # Setup and usage guide
 └── pytest.ini                  # Pytest configuration
 
-# Disclaimer
+## 4. Disclaimer
 
 <details>
-<summary>¿Por qué tarda la primera vez?</summary>
+<summary>What languages does this demo support?</summary>
 
-La primera ejecución inicializa la base `.chroma/` y genera embeddings de los archivos `.md` en `docs/`.
+The demo is fully functional in Spanish. Partial functionality exists for other languages, but they have not been thoroughly tested due to time constraints.
 
 </details>
 
 <details>
-<summary>¿Cómo añado nueva documentación?</summary>
+<summary>Why does it take longer on the first run?</summary>
 
-Añade el archivo `.md` dentro de `docs/<topic>/`.
+The first execution initializes the `.chroma/` database and generates embeddings from the `.md` files in the `docs/` folder.
 
-Borra el directorio `.chroma/` para forzar el re-indexado, o crea un script de ingesta incremental.
+</details>
+
+<details>
+<summary>How can I add new documentation?</summary>
+
+Add your `.md` file inside `docs/<topic>/`.
+
+Then delete the `.chroma/` directory to force re-indexing, or create an incremental ingestion script.
 
 </details>
