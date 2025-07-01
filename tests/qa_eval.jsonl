@@ -1,30 +1,30 @@
-{"user_input":"¿Qué porcentaje cobra la plataforma ClaraAI?","reference":"La tarifa de plataforma es el 10 % (docs/fees.md)."}
-{"user_input":"¿Quién paga el seguro de responsabilidad civil en ClaraAI?","reference":"Lo paga el cliente (docs/fees.md)."}
-{"user_input":"¿Cuánto es la comisión por cambio de divisa?","reference":"0,8 % para el freelancer (docs/fees.md)."}
-{"user_input":"Desglosa una factura típica de 2 000 € en ClaraAI.","reference":"Subtotal 2 000 €, fee plataforma 10 % (-200 €), total a percibir 1 800 € (docs/fees.md)."}
-{"user_input":"¿El IVA está incluido en las facturas de ClaraAI?","reference":"ClaraAI emite facturas con IVA exento por prestación internacional (docs/fees.md)."}
-{"user_input":"¿Cuánto tiempo tarda el onboarding de un cliente?","reference":"48 h en promedio tras la llamada de kick-off (docs/onboarding.md)."}
-{"user_input":"¿Cuáles son las tres fases del onboarding?","reference":"Registro y validación, Kick-off, Activación (docs/onboarding.md)."}
-{"user_input":"¿Qué sucede si el cliente no agenda la llamada en 72 h?","reference":"Se envía un recordatorio automático (docs/onboarding.md)."}
-{"user_input":"Who hosts the live platform demo during onboarding?","reference":"A Success Manager runs the live demo (docs/onboarding.md)."}
-{"user_input":"¿En qué fase se verifica el teléfono del cliente?","reference":"En la fase de Registro y validación (docs/onboarding.md)."}
-{"user_input":"¿Cómo funciona la activación de escrow?","reference":"El presupuesto se bloquea en una cuenta protegida al aprobar la propuesta (docs/payments.md)."}
-{"user_input":"Tiempo de retiro a SEPA después de la aprobación.","reference":"Hasta dos días hábiles (docs/payments.md)."}
-{"user_input":"¿Qué pasa si un cliente desaparece sin aprobar el hito?","reference":"ClaraAI libera el escrow tras 14 días de disputa (docs/payments.md)."}
-{"user_input":"List the four payment steps in ClaraAI.","reference":"Escrow activation, Milestone releases, Payout speed, Fees & taxes (docs/payments.md)."}
-{"user_input":"¿La plataforma retiene impuestos en los pagos?","reference":"Sí, deduce un 10 % de fee y emite una sola factura española (docs/payments.md)."}
-{"user_input":"¿Qué es un freelancer de ClaraAI?","reference":"Un profesional validado tras pruebas de skills, portfolio y entrevista (docs/freelancer.md)."}
-{"user_input":"¿Cuáles son los perks principales para un freelancer?","reference":"Pagos garantizados, matching AI y squads opcionales (docs/freelancer.md)."}
-{"user_input":"Average project duration on ClaraAI?","reference":"3–4 months with > €15 000 billing (docs/freelancer.md)."}
-{"user_input":"¿Cómo se llama internamente un freelancer?","reference":"Freeworker (docs/freelancer.md)."}
-{"user_input":"Does ClaraAI chase invoices for you?","reference":"No, because every project is escrow-protected (docs/freelancer.md)."}
-{"user_input":"Plazo máximo para abrir una disputa.","reference":"14 días tras marcar un hito como entregado (docs/disputes.md)."}
-{"user_input":"¿Cuánto tarda un árbitro en responder inicialmente?","reference":"Menos de 48 h (docs/disputes.md)."}
-{"user_input":"Resultados posibles de una disputa.","reference":"Reembolso parcial, reenvío, o pago íntegro (docs/disputes.md)."}
-{"user_input":"Tasa histórica de disputas en 2024.","reference":"0,9 % de los proyectos cerrados (docs/disputes.md)."}
-{"user_input":"¿Cuántos días hay para apelar una disputa?","reference":"7 días (docs/disputes.md)."}
-{"user_input":"¿Qué documento cubre a las tres partes en un proyecto?","reference":"Un contrato tripartito único firmado digitalmente (docs/contracts.md)."}
-{"user_input":"Where are signed contracts stored?","reference":"In the same escrow vault as invoices for 5 years (docs/contracts.md)."}
-{"user_input":"¿Cuándo se lanzará el plugin de Figma según la hoja de ruta?","reference":"Está en el backlog como nice-to-have; sin fecha fija (docs/roadmap.md)."}
-{"user_input":"Fecha objetivo para el API de wallet de escrow.","reference":"15 de agosto de 2025 (docs/roadmap.md)."}
-{"user_input":"Objetivo principal del sprint Trust & Safety.","reference":"Reducir disputas por debajo del 1 % y soporte < 12 h (docs/roadmap.md)."}
+{"user_input":"¿Qué porcentaje cobra la plataforma ClaraAI?","reference":"La tarifa de plataforma es el 10 %."}
+{"user_input":"¿Quién paga el seguro de responsabilidad civil en ClaraAI?","reference":"Lo paga el cliente."}
+{"user_input":"¿Cuánto tiempo tengo para abrir una disputa después de la entrega de un hito?","reference":"Puedes abrir una disputa hasta 14 días después de marcar un hito como entregado."}
+{"user_input":"¿Cuánto tarda en resolverse una disputa en ClaraAI?","reference":"Un árbitro interno responde en menos de 48 horas después de recibir las evidencias."}
+{"user_input":"¿Cómo funciona el escrow en ClaraAI?","reference":"El presupuesto completo se bloquea en una cuenta de cliente protegida y se libera por hitos."}
+{"user_input":"¿Qué significa ser freelancer en ClaraAI?","reference":"Un ClaraAI freelancer es un profesional independiente que ha pasado un proceso de selección que incluye test de habilidades, revisión de portafolio y entrevista en vivo."}
+{"user_input":"¿Cuánto suele durar un proyecto típico en ClaraAI?","reference":"Los proyectos duran de media entre 3 y 4 meses."}
+{"user_input":"¿Cómo es el proceso de onboarding para nuevos clientes?","reference":"El onboarding tiene 3 fases y suele completarse en 48 horas."}
+{"user_input":"¿Qué sucede si el cliente no agenda la llamada de kick-off?","reference":"Si el cliente no agenda la llamada en 72 horas, se activa un recordatorio automático."}
+{"user_input":"¿Cómo son los pagos para freelancers en ClaraAI?","reference":"Los freelancers pueden retirar sus fondos por transferencia SEPA en un máximo de dos días hábiles o vía Wise/PayPal."}
+{"user_input":"¿Qué pasa si un cliente desaparece y no aprueba el hito?","reference":"Si el cliente no responde en 14 días, ClaraAI libera los fondos del escrow automáticamente."}
+{"user_input":"¿Cuándo estará disponible el API de cartera escrow para clientes enterprise?","reference":"Está previsto para el 15 de agosto de 2025 y actualmente está en fase de discovery/design."}
+{"user_input":"¿Habrá verificación de identidad para freelancers?","reference":"Está previsto un sistema de perfiles verificados con KYC para octubre de 2025."}
+{"user_input":"¿Cuáles son los próximos planes para el roadmap de ClaraAI?","reference":"En Q1 2026 planean incorporar pagos multi-moneda, un dashboard de analíticas para hiring managers y Squads 2.0."}
+{"user_input":"¿Quiénes forman parte del equipo fundador de ClaraAI?","reference":"Clara Müller (CEO), Luis Ortega (CTO) y Martina López (Head of Operations) forman el equipo fundador."}
+{"user_input":"¿Qué beneficios tiene ser freelancer en ClaraAI?","reference":"Los freelancers tienen pagos garantizados, acceso a matching por IA y la posibilidad de formar squads para proyectos grandes."}
+{"user_input":"¿Cómo puedo acelerar un pago en ClaraAI?","reference":"Existe una opción de pago urgente con una comisión adicional del 2 % para procesamiento en el mismo día."}
+{"user_input":"¿Cómo se documentan los contratos en ClaraAI?","reference":"Los contratos se firman digitalmente vía Signaturit y se almacenan en el escrow vault durante 5 años."}
+{"user_input":"¿Qué tipos de resolución existen en una disputa?","reference":"Las posibles resoluciones son: reembolso parcial, reentrega de entregables o pago íntegro al freelancer."}
+{"user_input":"¿Cuántos freelancers validados tiene ClaraAI actualmente?","reference":"La plataforma tiene más de 10 000 freelancers validados en Europa."}
+{"user_input":"¿Cuál es la política fiscal aplicada en las facturas de ClaraAI?","reference":"Las facturas se emiten con IVA exento por prestación internacional de servicios según el artículo 69 de la LIVA."}
+{"user_input":"¿Qué herramientas usa ClaraAI para el matching de freelancers?","reference":"Utiliza un sistema de IA que hace sugerencias basadas en un gráfico de habilidades en tiempo real y no en simple coincidencia de palabras clave."}
+{"user_input":"¿Cuándo se lanzará la funcionalidad de briefs de proyecto en un clic?","reference":"Está programada para el 15 de julio de 2025 y actualmente está en desarrollo."}
+{"user_input":"¿Qué sucede si un proyecto se extiende más allá del tiempo previsto?","reference":"No es necesario firmar un nuevo contrato; el MSA original cubre todas las ampliaciones de alcance y tiempo."}
+{"user_input":"¿Qué plazo tiene un freelancer para apelar una disputa?","reference":"Tiene una ventana de 7 días para apelar la resolución inicial."}
+{"user_input":"¿Cómo puedo pagar en múltiples monedas en ClaraAI?","reference":"El roadmap incluye la funcionalidad de pagos en USD y GBP para el primer trimestre de 2026."}
+{"user_input":"¿Qué sistema usará ClaraAI para auditar los hitos?","reference":"A partir de octubre de 2025, ClaraAI implementará auditorías automáticas de hitos usando ML para detectar scope creep."}
+{"user_input":"¿Puedo obtener una factura única por mis ingresos en ClaraAI?","reference":"Sí, ClaraAI genera una única factura española para facilitar la contabilidad del freelancer."}
+{"user_input":"¿Cuál es la meta de reducción de disputas según el roadmap?","reference":"El objetivo es reducir las disputas por debajo del 1 % y bajar el tiempo de resolución manual a menos de 12 horas."}
+{"user_input":"¿Dónde están las oficinas de ClaraAI?","reference":"ClaraAI es remote-first, pero tiene hubs físicos en Barcelona y Berlín."}

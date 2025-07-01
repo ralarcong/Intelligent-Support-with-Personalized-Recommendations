@@ -11,20 +11,20 @@ from langchain.prompts import PromptTemplate
 from langchain.schema.runnable import RunnablePassthrough
 from langchain.callbacks.streaming_aiter import AsyncIteratorCallbackHandler
 from langchain_core.tools import Tool
-from src.app.tools.mood import detect_mood
+from app.tools.mood import detect_mood
 from collections import defaultdict
 from pprint import pprint
-from langchain_core.messages import AIMessage
 import asyncio
+import re
 from dotenv import load_dotenv
 
 class RAGService:
     def __init__(self, docs_path: str = "docs", persist_dir: str = ".chroma", max_history: int = 8):
         load_dotenv()
         self.emb = OpenAIEmbeddings()                          
-        self.llm = ChatOpenAI(model_name="gpt-4.1-nano", temperature=0.2)
+        self.llm = ChatOpenAI(model_name="gpt-4.1-mini", temperature=0.2)
         self.llm_tools = self.llm.bind_tools([detect_mood])
-
+        
         loader = DirectoryLoader(Path(docs_path), glob="**/*.md")
         docs = loader.load()  
 
@@ -41,7 +41,7 @@ class RAGService:
         self._chains = {}
         self._max_history = max_history
         self._user_mood = defaultdict(lambda:{"style": "profesional", "emoji": "🙂"}
-)
+        )
 
         self._reply_template = PromptTemplate(
             input_variables=["context", "question", "chat_history", "style", "emoji"],
@@ -57,6 +57,7 @@ class RAGService:
                 "Pregunta:\n{question}\n"
             ),
         )
+
 
     def _get_chain(self, uid: str):
         if uid not in self._chains:
@@ -105,10 +106,20 @@ class RAGService:
         answer  = result["answer"]
         sources = [d.metadata["source"] for d in result["source_documents"]]
         return answer, sources
+    
+    
+
+    def _is_off_scope(self, text: str) -> bool:
+        OFF_SCOPE_PATTERNS = [r"<html", r"código html", r"javascript", r"css",r"poema", r"chiste", r"receta", r"meme",]
+        return any(re.search(p, text, re.I) for p in OFF_SCOPE_PATTERNS)
 
     async def ask_stream(self, question: str, uid: str, τ: float = 0.15):
         """Async generator that yields the answer token-by-token."""
         print(">> ask_stream called:", question)
+        if self._is_off_scope(question):
+            yield "Lo siento, no puedo ayudar con eso."
+            return
+
         self._update_mood(uid, question)
         history = self._get_chain(uid).memory.load_memory_variables({})["chat_history"]
         print("📝 chat_history:", history or "(empty)")
@@ -120,7 +131,7 @@ class RAGService:
         cb_answer = AsyncIteratorCallbackHandler()          
 
         llm_stream = ChatOpenAI(                            
-            model_name="gpt-4.1-nano",
+            model_name="gpt-4.1-mini",
             temperature=0.2,
             streaming=True,
             callbacks=[cb_answer],

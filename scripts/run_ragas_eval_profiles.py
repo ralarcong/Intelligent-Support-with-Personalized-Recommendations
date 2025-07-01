@@ -1,58 +1,119 @@
+from app.deps import get_rag, get_rec
+import pandas as pd
 import json
-from ragas import evaluate, EvaluationDataset
-from ragas.metrics import ResponseRelevancy, Faithfulness, ContextPrecision
-from app.deps import get_rag
+from pathlib import Path
+import time
+import matplotlib.pyplot as plt
+import numpy as np
 
-# Load synthetic user profiles and query histories
-with open("tests/synthetic_user_profiles.json", "r", encoding="utf-8") as f:
-    user_profiles = json.load(f)
+total_rag_latency = 0
+total_rec_latency = 0
+total_rag_queries = 0
+total_rec_calls = 0
 
-with open("tests/synthetic_query_histories.json", "r", encoding="utf-8") as f:
-    query_histories = json.load(f)
+examples = []
+with open("tests/profile_eval.jsonl", encoding="utf-8") as f:
+    for line in f:
+        examples.append(json.loads(line))
 
-# Create a mapping from user_id to user profile
-user_profile_map = {profile["user_id"]: profile for profile in user_profiles}
+rag = get_rag()
+rec = get_rec()
 
-# Initialize the RAG chain
-rag_chain = get_rag()._get_chain("eval")  # Ensure this returns a chain compatible with Ragas
+dataset_rows = []
 
-# Prepare evaluation samples
-samples = []
+for idx, example in enumerate(examples):
+    uid = f"user_{idx}"
 
-for user_history in query_histories:
-    user_id = user_history["user_id"]
-    profile = user_profile_map.get(user_id, {})
-    for query in user_history["query_history"]:
-        # Invoke the RAG chain with the user's query
-        result = rag_chain.invoke({"question": query})
-        response = result.get("answer", "")
-        contexts = [doc.page_content for doc in result.get("source_documents", [])]
+    # Historial previo
+    for prev_query in example["history"]:
+        start_time = time.time()
+        answer, sources = rag.ask(prev_query, uid=uid)
+        elapsed = time.time() - start_time
 
-        # Create an evaluation sample
-        sample = {
-            "user_input": query,
-            "response": response,
-            "retrieved_contexts": contexts,
-            "reference": "",  # Provide the reference answer if available
-            "metadata": {
-                "user_id": user_id,
-                "role": profile.get("role", ""),
-                "expertise": profile.get("expertise", ""),
-                "goals": profile.get("goals", [])
-            }
-        }
-        samples.append(sample)
+        total_rag_latency += elapsed
+        total_rag_queries += 1
 
-# Convert samples to EvaluationDataset
-dataset = EvaluationDataset.from_list(samples)
+        rec.log_sources(uid, sources)
+        rec.log_query(uid, prev_query)
 
-# Evaluate the dataset
-result = evaluate(
-    dataset,
-    metrics=[ResponseRelevancy(), Faithfulness(), ContextPrecision()],
-)
+    # User input (también cuenta para latencia)
+    start_time = time.time()
+    answer, sources = rag.ask(example["user_input"], uid=uid)
+    elapsed = time.time() - start_time
 
-# Print evaluation results
-print("\n=== RAGAS Evaluation Results ===")
-for metric, score in result.items():
-    print(f"{metric:22s}: {score:.3f}")
+    total_rag_latency += elapsed
+    total_rag_queries += 1
+
+    rec.log_sources(uid, sources)
+    rec.log_query(uid, example["user_input"])
+
+    # Recommender timing
+    start_time = time.time()
+    recommendations = rec.recommend(uid, k=3)
+    elapsed = time.time() - start_time
+
+    total_rec_latency += elapsed
+    total_rec_calls += 1
+
+    retrieved_contexts = [r["title"].lower() for r in recommendations]
+
+    dataset_rows.append({
+        "user_input": example["user_input"],
+        "reference": example["reference"],
+        "retrieved_contexts": retrieved_contexts,
+        "expected_sources": example["expected_sources"],
+    })
+
+# Calcular precisión@k manual
+def precision_at_k(row):
+    hits = sum(1 for doc in row["retrieved_contexts"] if doc in row["expected_sources"])
+    return hits / len(row["retrieved_contexts"]) if row["retrieved_contexts"] else 0
+
+df = pd.DataFrame(dataset_rows)
+df["precision_at_k"] = df.apply(precision_at_k, axis=1)
+
+print("\n=== Recommender Title-level Precision@k ===")
+print(df["precision_at_k"].mean())
+
+print("\n=== Latency and Call Metrics ===")
+print(f"Total RAG queries: {total_rag_queries}")
+print(f"Total RAG time (s): {total_rag_latency:.2f}")
+print(f"Average RAG latency per query (s): {total_rag_latency / total_rag_queries:.3f}")
+
+print(f"Total recommender calls: {total_rec_calls}")
+print(f"Total Recommender time (s): {total_rec_latency:.2f}")
+print(f"Average recommender latency (s): {total_rec_latency / total_rec_calls:.3f}")
+
+# ---- Dashboard gráfico ----
+fig, axs = plt.subplots(1, 3, figsize=(15, 4))
+
+# 1. Latencia promedio
+labels = ['RAG avg latency (s)', 'Recommender avg latency (s)']
+latencies = [
+    total_rag_latency / total_rag_queries if total_rag_queries else 0,
+    total_rec_latency / total_rec_calls if total_rec_calls else 0
+]
+axs[0].bar(labels, latencies, color=['blue', 'orange'])
+axs[0].set_title('Average Latency')
+axs[0].set_ylabel('Seconds')
+
+# 2. Distribución Precision@k
+axs[1].hist(df["precision_at_k"], bins=np.linspace(0, 1, 5), edgecolor="black")
+axs[1].set_title('Precision@k Distribution')
+axs[1].set_xlabel('Precision@k')
+axs[1].set_ylabel('Number of examples')
+
+# 3. Número de llamadas
+counts = [total_rag_queries, total_rec_calls]
+axs[2].bar(['RAG queries', 'Rec calls'], counts, color=['green', 'purple'])
+axs[2].set_title('Call Volume')
+
+plt.tight_layout()
+
+output_dir = Path("dashboards")
+output_dir.mkdir(parents=True, exist_ok=True)
+
+output_path = output_dir / "recommender_eval_dashboard.png"
+plt.savefig(output_path, dpi=150)
+print(f"✅ Dashboard guardado en: {output_path}")
+plt.show()

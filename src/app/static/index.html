@@ -7,7 +7,6 @@
     body{font-family:system-ui, sans-serif;max-width:60rem;margin:2rem auto;padding:0 1rem;}
     textarea{width:100%;height:6rem;padding:.5rem;font:inherit}
     button{margin:.5rem .25rem;padding:.5rem 1rem;font:inherit;cursor:pointer}
-    /* visual feedback while disabled */
     button[disabled]{opacity:.5;cursor:not-allowed}
     pre{background:#f6f8fa;padding:1rem;border-radius:6px;white-space:pre-wrap}
   </style>
@@ -37,32 +36,26 @@ function ask() {
   if (!question) return;
 
   setBusy(true);
-  $out.textContent = "";                       // clear
-  const src = new EventSource(
-      `/api/ask_stream?question=${encodeURIComponent(question)}&user_id=${uid}`,
-      {withCredentials:false});
+  $out.textContent = "";
 
-  src.onmessage = e => {                       // every token arrives here
-    $out.textContent += e.data;
+  const src = new EventSource(
+      `/api/ask_stream?question=${encodeURIComponent(question)}&user_id=${uid}`);
+
+  src.onmessage = e => { $out.textContent += e.data; };
+
+  const finish = () => {           // factor común para cerrar y liberar
+    src.close();
+    setBusy(false);
+    $q.value = "";                 // ← limpia la caja para la siguiente pregunta
   };
-  src.onerror = () => {
-    src.close();
-    setBusy(false);
-  };
-  src.onopen  = () => console.debug("⏳ stream started");
-  src.addEventListener("end", () => {          // we never send this, fallback to close()
-    src.close();
-    setBusy(false);
-  });
-  src.addEventListener("close", () => {        // custom event if you emit one
-    src.close();
-    setBusy(false);
-  });
-  // when the server finishes it closes the connection => this `onclose` triggers
-  src.onclose = () => setBusy(false);
+
+  src.onerror        = finish;
+  src.onopen         = () => console.debug("⏳ stream started");
+  src.addEventListener("close", finish);
+  src.addEventListener("end",   finish);
 }
 
-async function recommend() {                   // unchanged
+async function recommend() {
   setBusy(true);
   $out.textContent = "(waiting …)";
   try {
@@ -76,13 +69,12 @@ async function recommend() {                   // unchanged
     $out.textContent = "⚠️ " + err;
   } finally {
     setBusy(false);
+    $q.value = "";                 // opcional: limpiar también tras recomendación
   }
 }
 
 $ask.onclick = ask;
 $rec.onclick = recommend;
 </script>
-  
-
 </body>
 </html>

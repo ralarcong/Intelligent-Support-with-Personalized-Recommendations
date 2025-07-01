@@ -1,0 +1,6 @@
+{"history": ["quiero saber cómo son los contratos", "explícame las tarifas de plataforma"], "user_input": "¿Qué hago si tengo una disputa con un freelancer?", "reference": "disputes", "expected_sources": ["aboutus", "roadmap", "onboarding"]}
+{"history": ["cómo es el proceso de onboarding", "dime sobre pagos y escrows"], "user_input": "Quién forma parte del equipo de ClaraAI", "reference": "aboutus", "expected_sources": ["roadmap", "disputes", "contracts"]}
+{"history": ["qué servicios ofrece ClaraAI", "qué herramientas de gestión tienen"], "user_input": "Qué nuevas funciones vienen próximamente", "reference": "roadmap", "expected_sources": ["aboutus", "onboarding", "payments"]}
+{"history": ["cómo funciona el escrow", "cuáles son las fases del onboarding"], "user_input": "Explícame cómo se firman los contratos", "reference": "contracts", "expected_sources": ["roadmap", "fees", "disputes"]}
+{"history": ["cómo evitar disputas", "dime como está conformado el equipo de ClaraAI"], "user_input": "Cuánto cobra la plataforma por sus servicios", "reference": "fees", "expected_sources": ["services", "payments", "roadmap"]}
+{"history": ["explica cómo se procesan los pagos", "cuáles son las fases del onboarding"], "user_input": "Dime qué herramientas de gestión hay para proyectos", "reference": "services", "expected_sources": ["onboarding", "contracts", "aboutus"]}

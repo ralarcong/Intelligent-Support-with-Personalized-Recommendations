@@ -1,17 +1,29 @@
 # How payments work on ClaraAI
 
-1. **Escrow activation** – once the client approves a proposal,
-   ClaraAI locks the full budget in a safeguarded client account  
-   (visible as *“Funds in escrow”* on your dashboard) :contentReference[oaicite:10]{index=10}.
+## 1. Escrow activation
 
-2. **Milestone releases** – funds are paid out automatically at each
-   milestone you mark as *Delivered*.  No waiting for client paperwork.
+Once the client approves a proposal, ClaraAI locks the full budget in a safeguarded client account. This appears as *“Funds in escrow”* on your dashboard.
 
-3. **Payout speed** – after approval you can **withdraw to SEPA bank
-   within two business days** or to Wise/PayPal for other regions.
+## 2. Milestone releases
 
-4. **Fees & taxes** – ClaraAI withholds a transparent 10 % platform fee;
-   you receive a single Spanish invoice for easy bookkeeping :contentReference[oaicite:11]{index=11}.
+- Freelancers mark milestones as **Delivered**.
+- Clients have **14 days** to approve or open a dispute.
+- If no action is taken, funds auto-release.
 
-> 💡 **Guaranteed-on-time:** If the client ghosts, ClaraAI still releases
-> the escrow after a 14-day dispute window, so your cash flow is safe :contentReference[oaicite:12]{index=12}.
+## 3. Payout speed
+
+- **SEPA withdrawals:** under 2 business days.
+- **International payments:** Wise and PayPal options available.
+- **Optional instant payout:** same-day for an extra fee (+2%).
+
+## 4. Fees & taxes
+
+- Flat **10 % platform fee** for freelancers.
+- Spanish single-invoice system for freelancers worldwide.
+- ClaraAI issues **year-end earnings summaries** for tax reporting.
+
+## 5. Backup protections
+
+If a client disappears (ghosts), ClaraAI releases escrowed funds after the **14-day dispute window**.
+
+> 💡 **Guaranteed-on-time:** Protects freelancer cash flow.

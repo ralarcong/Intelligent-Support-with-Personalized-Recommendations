@@ -1,14 +1,24 @@
-# Tarifas y retenciones
+# Fees and Deductions
 
-| Concepto | % | Quién lo paga |
-|----------|---|---------------|
-| Fee de plataforma | 10 % | Freelancer |
-| Seguro de responsabilidad civil | 1 % | Cliente |
-| Comisión por cambio de divisa | 0.8 % | Freelancer |
+ClaraAI applies a simple and transparent fee and deduction structure.
 
-### Desglose en factura
-Subtotal (trabajo) €2 000
-Fee plataforma (10 %) €-200
-Total a percibir €1 800
+| Item | % | Who pays |
+|-----|---|---------|
+| Platform fee | 10 % | Freelancer |
+| Liability insurance | 1 % | Client |
+| Currency conversion fee | 0.8 % | Freelancer |
 
-Las facturas se emiten con IVA **exento** por prestación internacional de servicios (art. 69 LIVA).
+## Invoice breakdown — Example
+
+Subtotal (work) €2,000  
+Platform fee (10 %) €-200  
+Total payable €1,800  
+
+## Tax policy
+
+Invoices are issued with **VAT exemption** for international service provision (Article 69 LIVA).
+
+## Other optional fees
+
+- **Urgent payout:** +2 % for same-day processing.
+- **Automatic currency conversion:** based on mid-market rate plus a fixed fee.
