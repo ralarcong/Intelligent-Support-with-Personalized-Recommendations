@@ -7,7 +7,7 @@ name = "shakers_rag"
 version = "0.1.0"
 description = "Retrieval-augmented Q&A + recommender demo for the Shakers challenge"
 authors = [
-  { name = "Your Name", email = "you@example.com" }
+  { name = "Rodrigo A.", email = "rodrigoalarcongr@gmail.com" }
 ]
 readme = "README.md"
 requires-python = ">=3.10"
@@ -24,6 +24,9 @@ dependencies = [
   "textblob>=0.19.0",               # sentiment EN
   "langdetect>=1.0.9",              # idioma auto-detect
   "pysentimiento>=0.7.0",           # sentiment ES (RoBERTuito)
+  "matplotlib",
+  "unstructured",
+  "unstructured[md]>=0.12"
 ]
 
 [project.optional-dependencies]     # pip install .[dev]
@@ -34,3 +37,7 @@ shakers-rag = "app.__main__:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+# ← NUEVO: di a setuptools que copie todo lo que haya en src/app/static/
+[tool.setuptools]
+package-data = { "app" = ["static/**"] }
