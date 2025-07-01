@@ -32,7 +32,7 @@ conda activate shakers-rag
 pip install -e .            # modo editable (dev)
 
 # Replace your OpenAI key
-export OPENAI_API_KEY="sk-..."
+export OPENAI_API_KEY=sk-...
 
 # Initiate the server and go to http://127.0.0.1:8000
 uvicorn main:app --reload
@@ -108,5 +108,13 @@ The first execution initializes the `.chroma/` database and generates embeddings
 Add your `.md` file inside `docs/<topic>/`.
 
 Then delete the `.chroma/` directory to force re-indexing, or create an incremental ingestion script.
+
+</details>
+
+
+<details>
+<summary>Do you have any contact information?</summary>
+
+Yes, you can contact me at rodrigoalarcongr@gmail.com
 
 </details>
