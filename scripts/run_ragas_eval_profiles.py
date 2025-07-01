@@ -1,3 +1,39 @@
+"""
+run_ragas_eval_profiles
+=======================
+
+End-to-end evaluation of the personalised *RecommendationService*.
+
+Workflow
+--------
+1. Replay synthetic user histories from ``tests/profile_eval.jsonl``:
+   every prior query is sent to RAG and logged into the recommender.
+2. Submit the **current** user question, again logging sources & query.
+3. Ask the recommender for *k=3* unseen suggestions.
+4. Collect latency for both RAG and recommender layers.
+5. Compute Precision@k against the expected document set.
+6. Save a three-panel dashboard to
+   ``dashboards/recommender_eval_dashboard.png`` showing:
+      • average latency per component  
+      • Precision@k distribution  
+      • call volume (RAG vs recommender).
+
+Running
+-------
+>>> python scripts/run_ragas_eval_profiles.py
+
+Output
+------
+The script prints mean Precision@k plus latency statistics and writes
+the evaluation figure to the *dashboards/* folder.
+
+Environment
+-----------
+Requires the same ``OPENAI_API_KEY`` and runtime dependencies as the
+main RAG service.
+"""
+
+
 from app.deps import get_rag, get_rec
 import pandas as pd
 import json
@@ -64,8 +100,22 @@ for idx, example in enumerate(examples):
         "expected_sources": example["expected_sources"],
     })
 
-# Calcular precisión@k manual
+
 def precision_at_k(row):
+    """
+    Precision@k for one synthetic user example.
+
+    Parameters
+    ----------
+    row
+        A ``pandas.Series`` with fields
+        ``retrieved_contexts`` and ``expected_sources``.
+
+    Returns
+    -------
+    float
+        The fraction of recommended titles that match the expected set.
+    """
     hits = sum(1 for doc in row["retrieved_contexts"] if doc in row["expected_sources"])
     return hits / len(row["retrieved_contexts"]) if row["retrieved_contexts"] else 0
 

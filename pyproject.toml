@@ -26,7 +26,8 @@ dependencies = [
   "pysentimiento>=0.7.0",           # sentiment ES (RoBERTuito)
   "matplotlib",
   "unstructured",
-  "unstructured[md]>=0.12"
+  "unstructured[md]>=0.12",
+  "ragas"
 ]
 
 [project.optional-dependencies]     # pip install .[dev]

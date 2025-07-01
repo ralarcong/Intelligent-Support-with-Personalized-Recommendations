@@ -1,4 +1,19 @@
-# --- new imports ---
+# src/app/services/recommender.py
+"""
+recommender
+===========
+
+Lightweight content-based recommender that operates on the same Chroma
+collection as the RAG service.
+
+For every user it stores:
+* ``docs``   – set of file paths already shown.
+* ``qvecs``  – stack of query embeddings (OpenAI).
+
+At recommendation time the centroid of read-docs + query vectors is
+computed and Maximum-Marginal-Relevance (MMR) is applied to select *k*
+unseen documents while promoting topical diversity.
+"""
 from dataclasses import dataclass, field
 from typing import Tuple
 from collections import defaultdict
@@ -13,6 +28,25 @@ class UserProfile:
     qvecs: list[np.ndarray]        = field(default_factory=list)
     
 class RecommendationService:
+    """
+    Personalised document recommender.
+
+    Parameters
+    ----------
+    vectordb : chromadb.api.models.Collection
+        Chroma collection shared with the Q&A service.
+    persist_path : str, default ``".profiles.json"``
+        JSON file used to persist user profiles across restarts.
+    flush_every : int, default 10
+        Number of write operations after which the JSON is flushed.
+
+    Attributes
+    ----------
+    emb : langchain_openai.OpenAIEmbeddings
+        Embedding client to vectorise new queries on the fly.
+    _profiles : dict[str, UserProfile]
+        In-memory store of per-user document sets and query vectors.
+    """
     def __init__(self,
                  vectordb,
                  persist_path: str = ".profiles.json",
@@ -29,15 +63,64 @@ class RecommendationService:
                                        "emoji":"🙂"})
 
     def log_sources(self, uid: str, sources: list[str]):
+        """
+        Mark the given source files as *read* by the user.
+
+        Parameters
+        ----------
+        uid : str
+            User identifier.
+        sources : list[str]
+            List of file paths retrieved by the RAG answer.
+        """
         self._profiles[uid].docs.update(sources)
         self._maybe_flush()
 
     def log_query(self, uid: str, query: str):
+        """
+        Embed and store a new user query for later centroid calculation.
+
+        Parameters
+        ----------
+        uid : str
+            User identifier.
+        query : str
+            Raw query string (in any language supported by the embedding
+            model).
+        """
         vec = np.array(self.emb.embed_query(query), dtype=np.float32)
         self._profiles[uid].qvecs.append(vec)
         self._maybe_flush()
 
     def recommend(self, uid: str, k: int = 3, lambda_: float = 0.5):
+        """
+        Return *k* unseen, diversified recommendations.
+
+        Parameters
+        ----------
+        uid : str
+            Target user.
+        k : int, default 3
+            Number of documents to suggest.
+        lambda_ : float, default 0.5
+            Relevance/diversity trade-off for MMR (``1 = purely
+            relevance``, ``0 = purely diversity``).
+
+        Returns
+        -------
+        list of dict
+            Each dictionary contains:
+            ``title``   : str – human-friendly title  
+            ``snippet`` : str – 140-char preview  
+            ``why``     : str – explanation in EN/ES depending on doc
+
+        Notes
+        -----
+        * Cold-start: if the user has no query vectors yet, *k* random
+          unseen documents are returned.
+        * Diversity boost: consecutive documents with identical
+          ``topic`` receive an extra penalty.
+        """
         profile = self._profiles[uid]
         seen    = profile.docs
 
@@ -58,6 +141,7 @@ class RecommendationService:
 
     # ---------- helpers ----------------------------------------------------
     def _get_vectors(self):
+        """Fetch all document embeddings, metadata, and raw text from the vector store."""
         data = self.vectordb._collection.get(
             include=["embeddings", "metadatas", "documents"])
         return data["ids"], np.array(data["embeddings"]), \
@@ -65,9 +149,11 @@ class RecommendationService:
 
     @staticmethod
     def _cos(a, b):        # cosine similarity
+        """Compute cosine similarity between two vectors."""
         return float(np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b)))
     
     def _centroid(self, emb, meta, profile: UserProfile):
+        """Calculate the user profile centroid from seen documents and past query vectors."""
         doc_vecs = emb[[i for i,m in enumerate(meta) if m["source"] in profile.docs]]
 
         q_vecs  = np.vstack(profile.qvecs) if profile.qvecs else np.empty((0, emb.shape[1]))
@@ -81,6 +167,7 @@ class RecommendationService:
 
 
     def _mmr(self, query_vec, emb, meta, candidates, k, λ):
+        """Select k diverse documents from candidates using MMR with topic penalization."""
         selected = []
         while candidates and len(selected) < k:
             mmr_score, pick = -1, None
@@ -97,6 +184,7 @@ class RecommendationService:
         return selected
     
     def _build_payload(self, idx, meta, txt, centroid, emb) -> dict:
+        """Format a recommendation payload with title, snippet, and a relevance explanation."""
         title = Path(meta[idx]["source"]).stem.replace("_", " ")
         rel   = self._cos(centroid, emb[idx])
         lang  = "es" if meta[idx].get("lang") == "es" else "en"
@@ -114,11 +202,13 @@ class RecommendationService:
         }
     
     def _maybe_flush(self):
+        """Flush user profiles to disk after every N writes (atomic swap for safety)."""
         self._writes += 1
         if self._writes % self.flush_every == 0:
             self._save_profiles()
 
     def _save_profiles(self):
+        """Persist all user profiles to JSON file on disk (overwrites previous version)."""
         data = {
             uid: {
                 "docs":  list(p.docs),
@@ -130,6 +220,7 @@ class RecommendationService:
         tmp.replace(self.persist)    # atomic swap
 
     def _load_profiles(self) -> dict[str, UserProfile]:
+        """Load user profiles from disk into memory, or initialize empty if none found."""
         if not self.persist.exists():
             return defaultdict(UserProfile)
         raw = json.loads(self.persist.read_text())

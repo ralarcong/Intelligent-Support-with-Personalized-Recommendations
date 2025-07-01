@@ -1,4 +1,26 @@
 # src/app/services/rag.py
+"""
+rag
+===
+
+High-level wrapper around a Retrieval-Augmented Generation (RAG) stack
+used by ClaraAI:
+
+* Embedding model  – ``OpenAIEmbeddings`` (text-embedding-3-small).
+* Vector store     – local **Chroma** collection (persistent).
+* LLM              – ``ChatOpenAI`` (gpt-4.1-mini) combined via
+  LangChain’s ``ConversationalRetrievalChain``.
+* Streaming        – token-level SSE through :py:meth:`ask_stream`.
+
+The class also tracks per-user short-term memory, mood detection and
+offers a basic off-scope filter to reject requests that are not related
+to ClaraAI’s product/knowledge base.
+
+Environment
+-----------
+The OpenAI key **must** be available as ``OPENAI_API_KEY`` (loaded by
+*python-dotenv* before any client instantiation).
+"""
 from pathlib import Path
 from chromadb.config import Settings
 from langchain_community.document_loaders import DirectoryLoader
@@ -19,6 +41,31 @@ import re
 from dotenv import load_dotenv
 
 class RAGService:
+    """
+    Retrieval-Augmented Q&A service for ClaraAI.
+
+    Parameters
+    ----------
+    docs_path : str, default ``"docs"``
+        Folder containing knowledge-base Markdown files.
+    persist_dir : str, default ``".chroma"``
+        Disk location of the Chroma collection (created if missing).
+    max_history : int, default 8
+        Maximum number of past user/assistant messages kept in the
+        :class:`langchain.memory.ConversationBufferMemory`.
+
+    Attributes
+    ----------
+    vectordb : chromadb.api.models.Collection
+        Shared vector store with embedded KB chunks.
+    emb : langchain_openai.OpenAIEmbeddings
+        Embedding client initialised with the active OpenAI key.
+    llm : langchain_openai.ChatOpenAI
+        LLM used for question re-phrasing and answer generation.
+    _reply_template : langchain.prompts.PromptTemplate
+        Prompt enforcing brevity (≤ 4 Spanish sentences) and including
+        hidden chain-of-thought instructions.
+    """
     def __init__(self, docs_path: str = "docs", persist_dir: str = ".chroma", max_history: int = 8):
         load_dotenv()
         self.emb = OpenAIEmbeddings()                          
@@ -114,7 +161,17 @@ class RAGService:
         return any(re.search(p, text, re.I) for p in OFF_SCOPE_PATTERNS)
 
     async def ask_stream(self, question: str, uid: str, τ: float = 0.15):
-        """Async generator that yields the answer token-by-token."""
+        """
+        Server-Sent Events generator that yields answer tokens.
+
+        The same similarity guard and off-scope filter are applied as
+        in :pymeth:`ask`.
+
+        Yields
+        ------
+        str
+            Token or partial chunk emitted by the streaming LLM.
+        """
         print(">> ask_stream called:", question)
         if self._is_off_scope(question):
             yield "Lo siento, no puedo ayudar con eso."

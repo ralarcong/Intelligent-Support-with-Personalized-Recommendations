@@ -1,3 +1,41 @@
+"""
+run_ragas_eval
+==============
+
+Offline benchmark for the *question-answering* (RAG) service.
+
+Workflow
+--------
+1. Load the JSONL dataset in ``tests/qa_eval.jsonl`` into a
+   :class:`ragas.EvaluationDataset`.
+2. For every sample:
+   - Invoke the **RAG** chain once (no streaming).
+   - Record per-query latency, generated answer and retrieved contexts.
+3. Compute the RAGAS metrics
+   * *response_relevancy*
+   * *faithfulness*
+   * *context_precision*.
+4. Print aggregated scores and latency statistics.
+5. Build a three-panel dashboard and save it to
+   ``dashboards/ragas_eval_dashboard.png``.
+
+Running
+-------
+>>> python scripts/run_ragas_eval.py
+
+Requirements
+------------
+* Environment variable ``OPENAI_API_KEY`` (or a ``.env`` file loaded by
+  *python-dotenv*).
+* All runtime dependencies declared in *pyproject.toml* are installed.
+
+Notes
+-----
+The script is self-contained and **does not mutate** the shared Chroma
+collection; it reuses the singleton :class:`~app.services.rag.RAGService`
+from :pymod:`app.deps`.
+"""
+
 from ragas import evaluate, EvaluationDataset
 from ragas.metrics import ResponseRelevancy, Faithfulness, ContextPrecision
 from app.deps import get_rag

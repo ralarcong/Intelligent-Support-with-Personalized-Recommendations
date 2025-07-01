@@ -1,4 +1,29 @@
 # src/app/tools/mood.py
+"""
+mood
+====
+
+Tool for detecting user emotional state and tone preferences from free-text input.
+
+Behavior
+--------
+- Automatically detects language (Spanish or English).
+- Runs **TextBlob** sentiment analysis for English.
+- Uses **pysentimiento / RoBERTuito** for Spanish.
+
+Mapping rules convert raw sentiment into:
+* mood: {'happy', 'sad', 'angry', 'neutral'}
+* style: Spanish tone description for LangChain prompts
+* emoji: Unicode emoji representing the mood
+
+Returns
+-------
+dict
+    Dictionary with fields:
+    - 'mood'   : str
+    - 'style'  : str
+    - 'emoji'  : str
+"""
 from langdetect import detect           # idioma
 from langchain_core.tools import tool
 from textblob import TextBlob           # EN
@@ -12,8 +37,20 @@ _EMOJI = {"happy": "😀", "sad": "😢", "angry": "😡", "neutral": "🙂"}
                   "and returns {'mood','style','emoji'}")
 def detect_mood(text: str) -> dict:
     """
-    Use TextBlob if the text is mostly in English;
-    uses pysentimiento (RoBERTuito) if it is in Spanish.
+    Infer mood, tone style, and emoji from user input text.
+
+    Parameters
+    ----------
+    text : str
+        Raw user input in any language (English, Spanish).
+
+    Returns
+    -------
+    dict
+        Keys:
+        - 'mood'   : str → e.g., 'happy', 'sad'
+        - 'style'  : str → tone guide for downstream prompts
+        - 'emoji'  : str → visual mood indicator
     """
     try:
         lang = detect(text)             # 'en', 'es', …
