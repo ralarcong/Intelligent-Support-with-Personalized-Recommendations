@@ -46,7 +46,7 @@ uvicorn main:app --reload
 Locate at the root directory and use one or both or the following commands:
 ```bash
 python scripts/run_ragas_eval.py #for RAG approach
-python scripts/run_ragas_eval.py #for recommender approach
+python scripts/ragas_eval_profiles.py #for recommender approach
 ```
 
 ## 3. Project structure
