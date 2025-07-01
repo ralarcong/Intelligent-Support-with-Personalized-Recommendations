@@ -12,7 +12,6 @@ First version of the reference project for the **Shakers** challenge:
 |-------------|---------------|
 | Python      | 3.10 |
 | Conda       | 4.10 + |
-| Compilador C/C++ 	(For building native dependencies) |
 
 
 ---
