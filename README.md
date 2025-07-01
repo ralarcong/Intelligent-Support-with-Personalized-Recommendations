@@ -112,8 +112,8 @@ Then delete the `.chroma/` directory to force re-indexing, or create an incremen
 
 
 <details>
-<summary>Do you have any contact information?</summary>
+<summary>Do you have any other questions?</summary>
 
-Yes, you can contact me at rodrigoalarcongr@gmail.com
+You can contact me at rodrigoalarcongr@gmail.com
 
 </details>
